@@ -6,20 +6,29 @@ import { TicketListView } from "../ticket/TicketListView";
 import { CreateTicket } from "../ticket/CreateTicket";
 
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 
 const TICKETS_API_URL = `${REST_API_URL}/tickets?_expand=user`;
 
 export const TicketList = () => {
   const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [showCreateTicket, setShowCreateTicket] = useState<boolean>(false);
-  const addTicketOnClick = () => {
-    setShowCreateTicket(true);
+  const [showCreateTicketForm, setShowCreateTicketForm] =
+    useState<boolean>(false);
+  const revealCreateTicketOnClick = () => {
+    setShowCreateTicketForm(true);
+  };
+  const onCreateTicket = () => {
+    setShowCreateTicketForm(false);
+  };
+  const onCancelCreateTicket = () => {
+    setShowCreateTicketForm(false);
   };
 
   useEffect(() => {
@@ -31,13 +40,21 @@ export const TicketList = () => {
     fetchTickets();
   }, []);
 
-  console.log(tickets);
-
   return (
     <>
-      <h3 className="ticket-list">Ticket List</h3>
-      <button onClick={addTicketOnClick}>Add Ticket</button>
-      {showCreateTicket && <CreateTicket />}
+      <Typography variant="h3" component="h3">
+        Ticket List
+      </Typography>
+      {showCreateTicketForm ? (
+        <CreateTicket
+          onCreate={onCreateTicket}
+          onDiscard={onCancelCreateTicket}
+        />
+      ) : (
+        <Button variant="contained" onClick={revealCreateTicketOnClick}>
+          Create Ticket
+        </Button>
+      )}
       filter (by status), assign
       <Table>
         <TableHead>

@@ -4,6 +4,8 @@ export interface Ticket {
   id: number;
   userId?: number;
   number: string;
-  status: string;
+  status: TicketStatus;
   user?: User;
 }
+
+export type TicketStatus = "assigned" | "completed" | "unassigned";
