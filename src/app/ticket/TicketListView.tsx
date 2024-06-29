@@ -26,7 +26,8 @@ export const TicketListView = ({ ticket }: TicketListViewProps) => {
   const onUserChange =
     (ticket: Ticket) =>
     async (event: React.SyntheticEvent, value: User | null) => {
-      await axios.post(`${TICKETS_API_URL}/`, {
+      console.log("value", value, "ticket", ticket);
+      await axios.put(`${TICKETS_API_URL}/${ticket.id}`, {
         ...ticket,
         userId: value?.id,
       });

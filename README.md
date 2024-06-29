@@ -125,5 +125,12 @@ sessions. Please also indicate approximately how long you spent on the submissio
 - yarn installation
 - node version requirement (v17 or later)
 - react-router replaced by react-router-dom
-- issues with shadcn, switch to material-ui
--
+- issues with shadcn, switched to material-ui
+- WIP for editing assigned user for ticket
+  - autocomplete not showing the correct value when already available
+  - wasn't able to verify the saving of the assigned user
+- Things to consider given more time
+  - Testing using React Testing Library
+  - reusing data rather than fetching every time for the detailed and list views
+  - reusing user list data rather than fetching every time when editing the assigned user
+  - using history.push instead of <Link> for react-router to preserve history but avoid rerendering the app
