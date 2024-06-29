@@ -1,21 +1,22 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Ticket } from "../interfaces/ticket";
+import { TableCell, TableRow } from "@mui/material";
+import { Avatar } from "../user/Avatar";
 
 interface TicketListViewProps {
   ticket: Ticket;
 }
 
 export const TicketListView = ({ ticket }: TicketListViewProps) => {
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate(`/tickets/${ticket.id}`);
-  };
-
   return (
-    <div key={ticket.id} className="ticket" onClick={handleClick}>
-      <div>{ticket.number}</div>
-      <div>{ticket.status}</div>
-    </div>
+    <TableRow key={ticket.id}>
+      <TableCell>
+        <Link className="hover:bg-slate-100" to={`/tickets/${ticket.id}`}>
+          {ticket.number}
+        </Link>
+      </TableCell>
+      <TableCell>{ticket.status}</TableCell>
+      <TableCell>{ticket.user && <Avatar user={ticket.user} />}</TableCell>
+    </TableRow>
   );
 };

@@ -12,7 +12,6 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { Link } from "react-router-dom";
 
 const TICKETS_API_URL = `${REST_API_URL}/tickets?_expand=user`;
 
@@ -50,15 +49,7 @@ export const TicketList = () => {
         </TableHead>
         <TableBody>
           {tickets.map((ticket) => (
-            <TableRow key={ticket.id}>
-              <TableCell>
-                <Link to={`/tickets/${ticket.id}`}>{ticket.number}</Link>
-              </TableCell>
-              <TableCell>{ticket.status}</TableCell>
-              <TableCell>
-                {ticket.user?.firstName} {ticket?.user?.lastName}
-              </TableCell>
-            </TableRow>
+            <TicketListView key={ticket.id} ticket={ticket} />
           ))}
         </TableBody>
       </Table>
