@@ -1,24 +1,18 @@
 import { useEffect, useState } from "react";
-import { Ticket } from "../interfaces/ticket";
+import { Ticket, TicketStatus } from "../interfaces/ticket";
 import { REST_API_URL } from "../constants/endpoints";
 import axios from "axios";
 import { TicketListView } from "../ticket/TicketListView";
 import { CreateTicket } from "../ticket/CreateTicket";
 
-import {
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
+import { Button, Table, TableBody, Typography } from "@mui/material";
+import { TicketListHeader } from "./TicketListHeader";
 
 const TICKETS_API_URL = `${REST_API_URL}/tickets?_expand=user`;
 
 export const TicketList = () => {
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [statusFilter, setStatusFilter] = useState<TicketStatus | "">("");
   const [showCreateTicketForm, setShowCreateTicketForm] =
     useState<boolean>(false);
   const revealCreateTicketOnClick = () => {
@@ -30,6 +24,17 @@ export const TicketList = () => {
   const onCancelCreateTicket = () => {
     setShowCreateTicketForm(false);
   };
+
+  const onStatusFilterChange = (status: TicketStatus) => {
+    setStatusFilter(status);
+  };
+
+  const filteredTickets = tickets.filter((ticket) => {
+    if (statusFilter === "") {
+      return true;
+    }
+    return ticket.status === statusFilter;
+  });
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -55,17 +60,13 @@ export const TicketList = () => {
           Create Ticket
         </Button>
       )}
-      filter (by status), assign
       <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Number</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>User</TableCell>
-          </TableRow>
-        </TableHead>
+        <TicketListHeader
+          statusFilter={statusFilter}
+          onStatusFilterChange={onStatusFilterChange}
+        />
         <TableBody>
-          {tickets.map((ticket) => (
+          {filteredTickets.map((ticket) => (
             <TicketListView key={ticket.id} ticket={ticket} />
           ))}
         </TableBody>

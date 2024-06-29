@@ -1,16 +1,11 @@
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Select,
-  SelectChangeEvent,
-  TextField,
-} from "@mui/material";
+import { Box, Button, SelectChangeEvent, TextField } from "@mui/material";
 import axios from "axios";
 import { REST_API_URL } from "../constants/endpoints";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { TicketStatus } from "../interfaces/ticket";
 import { User } from "../interfaces/user";
+import { SelectTicketStatus } from "./SelectTicketStatus";
+import { UserSelect } from "../user/UserSelect";
 
 interface CreateTicketProps {
   onCreate: () => void;
@@ -22,7 +17,6 @@ const TICKETS_API_URL = `${REST_API_URL}/tickets`;
 export const CreateTicket = ({ onCreate, onDiscard }: CreateTicketProps) => {
   const [ticketNumber, setTicketNumber] = useState<string>("");
   const [status, setStatus] = useState<TicketStatus>("unassigned");
-  const [userOptions, setUserOptions] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const onTicketNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,20 +40,6 @@ export const CreateTicket = ({ onCreate, onDiscard }: CreateTicketProps) => {
     onCreate();
   };
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const data = await axios.get(`${REST_API_URL}/users`);
-      setUserOptions(
-        data.data.map((user: User) => ({
-          ...user,
-          label: `${user.firstName} ${user.lastName}`,
-        }))
-      );
-    };
-
-    fetchUsers();
-  }, []);
-
   return (
     <div>
       <form>
@@ -70,24 +50,8 @@ export const CreateTicket = ({ onCreate, onDiscard }: CreateTicketProps) => {
             onChange={onTicketNumberChange}
             value={ticketNumber}
           />
-          <Select
-            native
-            variant="outlined"
-            value={status}
-            onChange={onStatusChange}
-          >
-            <option value="unassigned">Unassigned</option>
-            <option value="assigned">Assigned</option>
-            <option value="completed">Completed</option>
-          </Select>
-          <Autocomplete
-            options={userOptions}
-            renderInput={(params) => <TextField {...params} label="User" />}
-            value={selectedUser}
-            onChange={onUserChange}
-            sx={{ width: 300 }}
-          />
-
+          <SelectTicketStatus status={status} onStatusChange={onStatusChange} />
+          <UserSelect selectedUser={selectedUser} onUserChange={onUserChange} />
           <Button
             variant="contained"
             color="success"
